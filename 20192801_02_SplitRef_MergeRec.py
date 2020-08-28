@@ -29,7 +29,6 @@ import os
 
 # Einlesen meiner Lehrplan-Tabelle
 # die bereits gelinkte Version mit Uni und Stufe
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Datensaetze")
 df = pd.read_excel("20190128_lehrplaene_linked.xlsx")
 
 # Filtern der relevanten Spalten
@@ -148,7 +147,7 @@ ref.to_csv("20192801_Ref_pro_Syll_BA_Pflicht_15_18.csv", encoding='utf-8-sig', i
 # Splitten nach Herausgeber, als Trick, um das Matchen mit Sammelbandbeiträgen zu verbessern
 ref["referenzen"] = ref["referenzen"].str.split("Hg|Hrsg|hrsg|Eds|eds\s|eds\.\s|eds\.\)|\sed\.\s|\sed\s").str.get(0)
 
-## Matchen meiner Referenzliste mit der Citaviliste
+## Matchen meiner Referenzliste mit der Citaviliste (https://osf.io/x6m5v/)
 citavi = pd.read_excel("20192801_Citavi_Ref_clean.xlsx")
 citavi.rename(columns ={'Autor, Herausgeber oder Institution': 'autorin', 'Jahr ermittelt': 'jahr', 'Übergeordneter Titeleintrag (In:)': 'In'}, inplace = True)
 citavi.In.fillna("", inplace = True)
