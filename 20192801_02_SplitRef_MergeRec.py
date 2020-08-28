@@ -11,7 +11,7 @@ in der die Referenzen der Syllabi ihren "sauberen" Gegenpart finden. Der Endoutp
 dieses Skiptes ist eine Tabelle mit allen Referenzen pro Syllabus, inklusive einiger
 Variablen aus Citavi, die den Literaturtypus näher beschreiben (z.B. Monographie etc.).
 
-Gefiltert werden nur jene Bachelor-PflichtVeranstaltungen aus dem Zeitraum Wintersemester 2015/16 - Sommer 2018.
+Gefiltert werden nur jene Bachelor-Pflichtveranstaltungen aus dem Zeitraum Wintersemester 2015/16 - Sommer 2018.
 """
 
 import pandas as pd
@@ -29,14 +29,10 @@ import os
 
 # Einlesen meiner Lehrplan-Tabelle
 # die bereits gelinkte Version mit Uni und Stufe
-# Dies ist nicht die vollständige Liste der Lehrpläne, sondern die händisch bearbeitete,
-# die versucht, den Semesterzeitraum von WiSe15-SoSe18 abzudecken.
-# s. Dokumentation P:\SWITCHdrive\Datenerhebung\Methodenlehre\Lehrpläne\Dokumentation
 os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Datensaetze")
 df = pd.read_excel("20190128_lehrplaene_linked.xlsx")
 
 # Filtern der relevanten Spalten
-# Merke .query kann nicht mit Sonderzeichen im Variablennamen umgehen!
 # Hier filtere ich nach Pflichtkursen in Pflichtmodulen aus den Semestern Wi1617 und So17.
 sub_pflicht = df.query("WiSe1516 == 'x' | SoSe16 == 'x' | WiSe1617 == 'x' | SoSe17 == 'x' | WiSe1718 == 'x' | SoSe18 == 'x'").query("P_W_modul == 'P' and P_W_kurs == 'P'").query("stufe == 'BA'")
 # neuer Index
@@ -64,10 +60,9 @@ for i in sub_pflicht["weitere literatur"]:
 sub_pflicht["referenzen_basis"] = referenzen_basis
 sub_pflicht["referenzen_weitere"] = referenzen_weitere
 
-# Versuche mich nun am Loop für den ersten Satz Basisreferenzen.
-# Auch in der gesplitteten Darstellung der Referenzen möchte ich Variablen bei diesen
-# behalten, die dem Ausgangsdatensatz entspringen, wie verweise auf die Software,
-# Veranstaltungskategorie etc. Diese nehme ich daher im Loop mit.
+# Nun der Loop für die "Basisreferenzen". (Ich hatte bei der Extraktion der Bibliographien zunächst
+# zwischen "Basisliteratur" und "weiterer Literatur" unterschieden, wenn sich diese Unterscheidung aus den Informationen der Syllabi ableiten liess.)
+# Metadaten, wie Modultitel etc, übernehme ich im Loop.
 
 REF = []
 R_NR = []
@@ -148,20 +143,18 @@ ref_weitere = pd.DataFrame(
 ref = pd.concat([ref_basis, ref_weitere])
 
 # Sichern als csv.file
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Tables")
 ref.to_csv("20192801_Ref_pro_Syll_BA_Pflicht_15_18.csv", encoding='utf-8-sig', index= False)
 
 # Splitten nach Herausgeber, als Trick, um das Matchen mit Sammelbandbeiträgen zu verbessern
 ref["referenzen"] = ref["referenzen"].str.split("Hg|Hrsg|hrsg|Eds|eds\s|eds\.\s|eds\.\)|\sed\.\s|\sed\s").str.get(0)
 
 ## Matchen meiner Referenzliste mit der Citaviliste
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Datensaetze")
 citavi = pd.read_excel("20192801_Citavi_Ref_clean.xlsx")
 citavi.rename(columns ={'Autor, Herausgeber oder Institution': 'autorin', 'Jahr ermittelt': 'jahr', 'Übergeordneter Titeleintrag (In:)': 'In'}, inplace = True)
 citavi.In.fillna("", inplace = True)
 citavi.Untertitel.fillna("", inplace = True)
 
-# Zusammenfügen der Inhalte aus autorin und titel und In (falls vorhanden)
+# Zusammenfügen der Inhalte aus autorin und titel und In (falls vorhanden) für erfolgreicheres Matchen
 citavi["autorin titel In"] = citavi["autorin"] + " " + citavi["Titel"] + " " + citavi["Untertitel"] + " " + citavi["In"]
 citavi["autorin titel In"] = citavi["autorin titel In"].str.lower().str.replace(u" \u2013 ", "").str.replace("[(),;.-]", "").str.replace("/", " ").str.replace("ß", "ss").str.replace("\d", "")
 
@@ -170,7 +163,6 @@ ref["processed"] = ref["referenzen"].str.lower().str.replace("[(),;:.-]", "").st
 ref["processed"] = ref["processed"].str.replace("überarbeitete|überarb|auflage|\bund\b|verlag|aufl|verl|\bin\b|\bed|hrsg|hg|dies|\bmit\b|\beine\b|\bein\b|\bbei|\bder\b|\bdie\b", "")
 
 # Fuzzy Matching
-
 def fuzzy_match(x, choices, scorer, cutoff):
     return process.extractOne(
         x, choices=choices, scorer=scorer, score_cutoff=cutoff
@@ -185,11 +177,6 @@ matching_results = ref["processed"].apply(
 )
     
 ref["matching results"] = matching_results
-    
-## falls ich titel und namen doch noch mal getrennt matchen möchte - erste zwei zeilen müssten gehen, https://pythex.org/
-#ref["namen"] = ref["processed"].str.extract("^.*?(?=[0-9]{4}|:)")
-#ref["jahr"] = ref["processed"].str.extract("[0-9]{4}")
-#ref["titel"] = ref["processed"].str.extract('(?<=[1-9]).*') - noch nicht perfekt
 
 # noch die ratios raus, um eindeutige Referenzen zu haben
 ref["matching_results_rein"] = ref["matching results"].str[0]
@@ -201,7 +188,6 @@ df_sub = nodup.rename(columns = {'matching_results_rein': 'Label'})
 df_sub = df_sub.reset_index(drop= True)
 
 # Speichern als csv.file
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Tables")
 df_sub.to_csv("20192801_CitaviMatching_result.csv", encoding='utf-8-sig', index = False)
 
 # gematchte Referenzen (df_sub) mit der Citavispalte 'Dokumententypus' mergen, um 
