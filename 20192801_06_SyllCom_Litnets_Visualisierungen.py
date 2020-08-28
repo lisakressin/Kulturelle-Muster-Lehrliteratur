@@ -13,8 +13,6 @@ import networkx as nx
 from matplotlib import pyplot as plt
 from matplotlib.gridspec import GridSpec
 
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Objects")
-
 # Laden des ganzen Syllabi mit der Communityzugehörigkeit als Attribut.
 with open('Plaenegraph', 'rb') as Gplaene_file:
     Gplaene = pickle.load(Gplaene_file)
@@ -22,7 +20,6 @@ with open('Plaenegraph', 'rb') as Gplaene_file:
 # =============================================================================
 #      Visualisierung des Syllabinetzwerkes mit Communityzugehörigkeit
 # =============================================================================
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Plots")
 # giant = max(nx.connected_component_subgraphs(Gplaene), key=len)
 edge_width = [100*(d['weight']) for (u, v, d) in Gplaene.edges(data=True)]
 eins = [x for x,y in Gplaene.nodes(data=True) if y['modularity']==0]
@@ -80,7 +77,6 @@ syll_attr['Dichte'] = density
 syll_attr['Grad'] = round(grad['degree'], 2)
 syll_attr['Closeness'] = round(close['closeness centrality'], 2)
 
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Tables")
 syll_attr.to_csv("20192801_Plaene_Cummunities_Attr.csv", header=True, encoding='utf-8-sig', index=False)
 # Für den Artikel wurde diese Tabelle in http://www.tablesgenerator.com/latex_tables
 # eingelesen und für die Darstellung im Latex Dokument aufbereitet.
@@ -92,7 +88,6 @@ syll_attr.to_csv("20192801_Plaene_Cummunities_Attr.csv", header=True, encoding='
 knoten_prop = [round(x / sum(syll_attr['n Knoten (Syllabi)'])*100, 1) for x in syll_attr['n Knoten (Syllabi)']]
 
 # Einlesen der proportionalen Zusammensetzung der Communities nach Veranstaltungskategorien.
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Objects")
 with open('Kategorie_pro_Com', 'rb') as kat_file:
     kat = pickle.load(kat_file)
 
@@ -115,8 +110,6 @@ labels5 = list(kat[4].index)
 fracs5 = list(kat[4])
 
 ####
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Plots")
-
 plt.figure(1, figsize=(10,10))
 the_grid = GridSpec(4, 4)
 
@@ -135,8 +128,6 @@ plt.show()
 #                  Visualisierungen zur den Literaturnetzwerken
 # =============================================================================
 # Laden der Communitymitglieder und Literaturnetzwerke der Communities
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Objects")
-
 with open('Com0_members', 'rb') as com0_file:
     com0 = pickle.load(com0_file)
 with open('LitGraph_com0', 'rb') as Glit0_file:
@@ -155,7 +146,6 @@ with open('LitGraph_com2', 'rb') as Glit2_file:
 # Vergleichstabelle der Eigenschaften der Literaturnetzwerke pro Community
     
 # Laden der Attribute der Referenzen der ersten Community
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Objects")
 with open('Refattribute_com0', 'rb') as ref_attr0_file:
     ref_attr0 = pickle.load(ref_attr0_file)
 # Durchschnittsmasse der Literatur dieses ersten Subgraphen der ersten Community
@@ -187,7 +177,6 @@ grad = [grad_schnitt0, grad_schnitt1, grad_schnitt2]
 #closeness = [close_schnitt0, close_schnitt1, close_schnitt2]
 
 ################## Länge der Referenzlisten
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Tables")
 attr_df = pd.read_csv("20192801_Ref_pro_Lehrplan.csv", index_col = False)
 
 # Filtern der Syllbi der verschiedenen Communities
@@ -231,8 +220,6 @@ tab_attr_lit.to_csv("20192801_Litnetz_Com_Attr.csv", header=True, encoding='utf-
 
 ######################## Reftypen als Piecharts
 # com0
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Objects")
-
 with open('Refattribute_com0', 'rb') as ref_attr0_file:
     ref_attr0 = pickle.load(ref_attr0_file)
     
@@ -268,7 +255,6 @@ reftyp2_prop = (round(ref_attr2['Reftyp'].value_counts(normalize = True), 2)*100
 mono2 = (round(ref_attr1['Unterkat_Mono'].value_counts(normalize = True), 2)*100).astype(int).reset_index().rename(columns={'index': 'Mono_sub', 'Reftyp':'Anteil'})
 
 # Pie Charts der Reftypen
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Plots")
 # 1
 fig = plt.figure(1)
 ax1 = fig.add_axes([.1, .1, .8, .8], aspect=1, title='Community 1')
@@ -293,8 +279,6 @@ plt.savefig('20192801_Genre_Pie2.pdf', bbox_inches='tight')
 plt.show()
 
 ##### Häufigste Referenzen samt Art
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Tables")
-
 # Com1
 com0_attr_reduz = com0_attr.drop(['uni', 'modultitel', 'kurstitel', 'software', 'kategorie', 'com0', 'com1', 'com2'], axis=1)
 zitcount_lit0 = com0_attr_reduz['Label'].value_counts().reset_index().rename(columns={'index': 'Quelle', 'Label': 'Zitationszahl'})
