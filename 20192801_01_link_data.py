@@ -10,7 +10,6 @@ ist mein Datensatz mit allen tabellierten Syllabi aus der Methodenlehre.
 import os
 import pandas as pd
 import numpy as np
-os.chdir("P:\SWITCHdrive\Datenerhebung\Kommunikation_Feld")
 
 # Einlesen meiner Excel-Tabelle mit den Unicodes
 identifier = pd.read_excel("031118 Modulverantwortliche_kurz.xlsx", sheet_name = "unis")
@@ -18,8 +17,6 @@ identifier.drop_duplicates(inplace = True)
 identifier.dropna(how = "all", inplace = True)
 identifier["uninr"] = identifier["uninr"].astype('int')
 identifier = identifier.reset_index(drop=True)
-
-os.chdir("P:\SWITCHdrive\Datenerhebung\Methodenlehre\Lehrpläne")
 
 # Dies Taelle enthält die Syllabi, die den Semesterzeitraum von WiSe15-SoSe18 abdecken.
 df = pd.read_excel("271118_Lehrpläne_kurz.xlsx")
