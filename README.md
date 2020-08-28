@@ -1,3 +1,3 @@
 # TeachingNetwork
 
-Die Skripte entstammen der Auswertung der Lehrpläne der soziologischen Methodenlehre. Mithilfe netzwerkanalytischer Verfahren wurden Syllabi- und Literaturnetzwerker erstellt, um die kognitiven Strukturen der soziologischen Methodenlehre sichtbar zu machen.
+Die Skripte sind Teil meiner bibliometrischen Analyse von Lehrplänen der soziologischen Methodenlehre. Mithilfe netzwerkanalytischer Verfahren habe ich Syllabi- und Literaturnetzwerke erstellt, um kulturelle Muster der soziologischen Methodenlehre sichtbar zu machen.
