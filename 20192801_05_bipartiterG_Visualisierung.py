@@ -4,8 +4,7 @@ Created on Mon Dec 17 14:37:08 2018
 @author: KressinL
 
 In diesem Skript werden Eigenschaften des bipartiten Graphen und seiner Struktur
-visualisiert. Damit sind die Tabellen gemeint, die die Matrizen der projezierten
-Graphen wiedergeben und die Visualisierung des bipartiten Graphen als Netzwerk.
+visualisiert.
 """
 import os
 import pandas as pd
@@ -17,7 +16,6 @@ import pickle
 import random
 
 # Laden des bipartiten Graphen
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Objects")
 with open('B', 'rb') as B_file:
     B = pickle.load(B_file)
 
@@ -44,7 +42,6 @@ MplanBgew.index = [y for x,y in list(planB.nodes(data='Kurstitel'))]
 # willkürlicher Beispielausschnitt zur Darstellung
 mbspplan = MplanBgew.iloc[23:27, 23:27]
 
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Tables")
 mbspplan.to_csv("20192801_Besp_AM_Plaene.csv", header=True, encoding='utf-8-sig', index=True)
 # In Artikeln werden Tabellen jedes Mal mithilfe der folgenden seite bearbeitet:
 # http://www.tablesgenerator.com/latex_tables, um sie anschliessend in Latex-Dokumente
@@ -61,9 +58,7 @@ mbspref.to_csv("20192801_Besp_AM_Ref.csv", header=True, encoding='utf-8-sig', in
 
 # =============================================================================
 #                   bipartiten Graph zeichnen
-# =============================================================================
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Plots")
-
+# ============================================================================
 pos = dict()
 pos.update( (n, (1, i + 100 + i*2)) for i, n in enumerate(plaene) ) # put nodes from X at x=1
 pos.update( (n, (2, i)) for i, n in enumerate(lit) ) # put nodes from Y at x=2
