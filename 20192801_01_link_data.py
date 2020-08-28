@@ -3,11 +3,9 @@
 Created on Wed Jan 31 16:03:26 2018
 @author: KressinL
 
-In dem Skript merge ich den Uniidentifier aus der Tabelle "Lehrpläne_kurz" mit 
-den Universitätsnamen aus der Tabelle "Modulverantwortliche_kurz". Die erste Tabelle
-ist mein Datensatz mit allen tabellierten Syllabi aus der Methodenlehre, dahingehend bereinigt,
-dass von allen Veranstaltungen (gleiche Uni, gleiches Modul, gleicher Veranstaltungsname)
-nur noch eine Version enthalten ist.
+In dem Skript merge ich einen von mir erstellten Uniidentifier mit 
+den Universitätsnamen einer anderen Tabelle. Die erste Tabelle
+ist mein Datensatz mit allen tabellierten Syllabi aus der Methodenlehre.
 """
 import os
 import pandas as pd
@@ -23,8 +21,7 @@ identifier = identifier.reset_index(drop=True)
 
 os.chdir("P:\SWITCHdrive\Datenerhebung\Methodenlehre\Lehrpläne")
 
-# Dies ist nicht (!!!) die vollständige Liste der Lehrpläne, sondern die händisch bearbeitete,
-# die versucht, den Semesterzeitraum von WiSe15-SoSe18 abzudecken
+# Dies Taelle enthält die Syllabi, die den Semesterzeitraum von WiSe15-SoSe18 abdecken.
 df = pd.read_excel("271118_Lehrpläne_kurz.xlsx")
 
 ## Matchen von docnummer mit unicoder - uni als neue Spalte in den df einfügen
@@ -34,7 +31,7 @@ docnr = df["Docnr."].str.extract("(^\d{2})|[?<=_]([^_]{2})")
 docnr.columns = ["uninr", "out"]
 docnr = docnr["uninr"].fillna(docnr["out"])
 
-# extractete Uninr an df andocken und für die Übersichtlichkeit nach vorne holen.
+# Uninr an df andocken und für die Übersichtlichkeit an den Anfang der Tabelle.
 df["uninr"] = docnr.astype("int")
 cols = df.columns.tolist()
 cols = cols[:1] + [cols[-1]] + cols[1:len(cols)-1]
