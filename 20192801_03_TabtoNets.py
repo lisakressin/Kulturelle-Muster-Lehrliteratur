@@ -4,18 +4,15 @@ Created on Sat Nov 10 17:17:18 2018
 @author: KressinL
 
 Hier sind alle Veranstaltungen der drei von mir aggregierten Jahrgänge drin, BA und verpflichtend.
-In diesem File wird nicht nach Veranstaltungskategorien gefiltert. In diesem Skript
-wird aus der Tabelle "Date_Ref_pro_Lehrplan" das bipartite Netzwerk geformt.
+In diesem Skript wird aus der Tabelle "Date_Ref_pro_Lehrplan" das bipartite Netzwerk geformt.
 """
 import os
 import pandas as pd
 import networkx as nx
 import pickle
 
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Tables")
-
 # Einlesen der Tabelle, in der die pro Lehrplan gesplitte Literatur samt Metainformationen
-# zu den Lehrplnen und zur Literatur enthalten sind.
+# zu den Lehrplänen und zur Literatur enthalten ist.
 mergedf = pd.read_csv("20192801_Ref_pro_Lehrplan.csv", index_col = False)
 
 # Vorbereitung Uniname als nodeattribute
@@ -69,6 +66,5 @@ edgetuple= list(zip(mergedf.recnr, mergedf.Label))
 B.add_edges_from(edgetuple)
 
 # für den späteren Gebrauch abspeichern:
-os.chdir("P:\SWITCHdrive\Datenauswertung\Python_Zeug\Zitationsnetzwerke\Outputs\Objects")
 with open('B', 'wb') as B_file:
     pickle.dump(B, B_file)
